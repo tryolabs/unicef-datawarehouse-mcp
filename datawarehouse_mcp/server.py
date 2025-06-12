@@ -3,6 +3,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from datawarehouse_mcp.exceptions import DataWarehouseAPIError
 from datawarehouse_mcp.handlers import (
     handle_get_all_indicators_for_dataflow,
     handle_get_available_dataflows,
@@ -43,9 +44,14 @@ def get_all_indicators_for_dataflow(
         Dictionary containing indicators info and input arguments.
     """
     logger.info("Getting all indicators for dataflow %s", dataflow_id)
+    if dataflow_id == "":
+        msg = "Dataflow ID is required"
+        logger.error(msg)
+        raise DataWarehouseAPIError(msg)
+
     indicators_info = handle_get_all_indicators_for_dataflow(dataflow_id)
     return {
-        "indicators_info": indicators_info,
+        "all_indicators": indicators_info,
         "input_arguments": {"dataflow_id": dataflow_id},
     }
 
@@ -71,6 +77,11 @@ def get_data_for_dataflow(
     Returns:
         Dictionary containing data and input arguments.
     """
+    if dataflow_id == "":
+        msg = "Dataflow ID is required"
+        logger.error(msg)
+        raise DataWarehouseAPIError(msg)
+
     data = handle_get_data_for_dataflow(
         dataflow_id=dataflow_id,
         ref_areas=ref_areas,
@@ -79,7 +90,7 @@ def get_data_for_dataflow(
     )
 
     return {
-        "data": str(data),
+        "data": data.to_string(max_rows=None, max_cols=None),  # type: ignore[misc]
         "input_arguments": {
             "dataflow_id": dataflow_id,
             "ref_areas": ref_areas,

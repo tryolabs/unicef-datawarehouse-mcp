@@ -75,18 +75,21 @@ def handle_get_data_for_dataflow(
         pd.DataFrame: DataFrame containing the requested data
     """
     logger.info("Getting data for dataflow %s", dataflow_id)
+    try:
+        url = urllib.parse.urljoin(
+            BASE_URL,
+            f"data/{dataflow_id}/{ref_areas}.{indicators}?format=sdmx-json",
+        )
 
-    url = urllib.parse.urljoin(
-        BASE_URL,
-        f"data/{dataflow_id}/{ref_areas}.{indicators}?format=sdmx-json",
-    )
+        data = requests.get(url, timeout=200).json()
 
-    data = requests.get(url, timeout=200).json()
+        if "errors" in data:
+            raise DataWarehouseAPIError(str(data["errors"]))
 
-    if "errors" in data:
-        raise DataWarehouseAPIError(str(data["errors"]))
-
-    data = build_df_from_json(data["data"])
+        data = build_df_from_json(data["data"])
+    except (requests.RequestException, ValueError, KeyError) as e:
+        logger.exception("Error getting data for dataflow %s", dataflow_id)
+        raise DataWarehouseAPIError(str(e)) from e
 
     if year is not None and str(year) in data["TIME_PERIOD"].unique():
         data = data[data["TIME_PERIOD"] == str(year)]
