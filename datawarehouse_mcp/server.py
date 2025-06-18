@@ -1,4 +1,3 @@
-from logging import getLogger
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
@@ -9,11 +8,12 @@ from datawarehouse_mcp.handlers import (
     handle_get_available_dataflows,
     handle_get_data_for_dataflow,
 )
+from datawarehouse_mcp.logging_config import get_logger
 
 mcp = FastMCP("Data Warehouse MCP")
 
 
-logger = getLogger(__name__)
+logger = get_logger(__name__)
 
 
 @mcp.tool()

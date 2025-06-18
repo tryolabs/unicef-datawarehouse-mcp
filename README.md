@@ -19,7 +19,7 @@ uv sync
 To run the server, run:
 
 ```bash
-uv run datawarehouse_mcp/server.py
+mcp dev datawarehouse_mcp/server.py
 ```
 
 ### Running the tests
