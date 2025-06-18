@@ -10,7 +10,7 @@ from datawarehouse_mcp.handlers import (
     handle_get_data_for_dataflow,
 )
 
-mcp = FastMCP("Demo")
+mcp = FastMCP("Data Warehouse MCP")
 
 
 logger = getLogger(__name__)
