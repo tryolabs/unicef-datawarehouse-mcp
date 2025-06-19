@@ -27,7 +27,7 @@ mcp dev datawarehouse_mcp/server.py
 To run the tests, run:
 
 ```bash
-uv run tests/test_server.py
+uv run pytest
 ```
 
 ## License
