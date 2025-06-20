@@ -2,6 +2,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from datawarehouse_mcp.config import config
 from datawarehouse_mcp.exceptions import DataWarehouseAPIError
 from datawarehouse_mcp.handlers import (
     handle_get_all_indicators_for_dataflow,
@@ -10,7 +11,7 @@ from datawarehouse_mcp.handlers import (
 )
 from datawarehouse_mcp.logging_config import get_logger
 
-mcp = FastMCP("Data Warehouse MCP")
+mcp = FastMCP("Data Warehouse MCP", port=config.server.port)
 
 
 logger = get_logger(__name__)
@@ -98,3 +99,15 @@ def get_data_for_dataflow(
             "year": str(year) if year is not None else "",
         },
     }
+
+
+if __name__ == "__main__":
+    logger.info("🚀 Starting server... ")
+
+    logger.info(
+        'Check "http://localhost:%s/%s" for the server status',
+        config.server.port,
+        config.server.transport,
+    )
+
+    mcp.run(config.server.transport)
