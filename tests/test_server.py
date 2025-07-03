@@ -1,7 +1,6 @@
 import pytest
-
-from datawarehouse_mcp.exceptions import DataWarehouseAPIError
-from datawarehouse_mcp.server import (
+from exceptions import DataWarehouseAPIError
+from server import (
     get_all_indicators_for_dataflow,
     get_available_dataflows,
     get_data_for_dataflow,

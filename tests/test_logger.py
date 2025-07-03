@@ -1,6 +1,6 @@
 import logging
 
-from datawarehouse_mcp.logging_config import get_logger
+from logging_config import get_logger
 
 
 class TestLoggingConfig:

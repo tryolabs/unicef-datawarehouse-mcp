@@ -3,10 +3,9 @@ from logging import getLogger
 
 import pandas as pd
 import requests
-
-from datawarehouse_mcp.constants import BASE_URL
-from datawarehouse_mcp.exceptions import DataWarehouseAPIError
-from datawarehouse_mcp.sdmx_parser import build_df_from_json
+from constants import BASE_URL
+from exceptions import DataWarehouseAPIError
+from sdmx_parser import build_df_from_json
 
 logger = getLogger(__name__)
 

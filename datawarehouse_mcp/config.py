@@ -1,9 +1,8 @@
 from pathlib import Path
 
 import yaml
-
-from datawarehouse_mcp.logging_config import get_logger
-from datawarehouse_mcp.schemas import Config, ServerConfig
+from logging_config import get_logger
+from schemas import Config, ServerConfig
 
 logger = get_logger(__name__)
 

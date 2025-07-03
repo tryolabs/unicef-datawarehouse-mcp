@@ -1,15 +1,14 @@
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
-
-from datawarehouse_mcp.config import config
-from datawarehouse_mcp.exceptions import DataWarehouseAPIError
-from datawarehouse_mcp.handlers import (
+from config import config
+from exceptions import DataWarehouseAPIError
+from handlers import (
     handle_get_all_indicators_for_dataflow,
     handle_get_available_dataflows,
     handle_get_data_for_dataflow,
 )
-from datawarehouse_mcp.logging_config import get_logger
+from logging_config import get_logger
+from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("Data Warehouse MCP", port=config.server.port)
 
