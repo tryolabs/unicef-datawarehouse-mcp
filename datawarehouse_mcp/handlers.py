@@ -41,15 +41,23 @@ def handle_get_all_indicators_for_dataflow(dataflow_id: str) -> dict[str, str]:
     Returns:
         Dictionary mapping indicator IDs to their names
     """
-    url = urllib.parse.urljoin(BASE_URL, f"data/{dataflow_id}/All?format=sdmx-json")
-    data = requests.get(url, timeout=200).json()
-    data_structure = data["data"]["structure"]
-    indicators_info = {
-        val["id"]: val["name"]
-        for i, attr in enumerate(data_structure["dimensions"]["series"])
-        for _, val in enumerate(attr["values"])
-        if i == 1
-    }
+    logger.info("Getting indicators info for dataflow %s", dataflow_id)
+    try:
+        url = urllib.parse.urljoin(BASE_URL, f"data/{dataflow_id}/All?format=sdmx-json")
+        data = requests.get(url, timeout=200).json()
+        data_structure = data["data"]["structure"]
+        indicators_info = {
+            val["id"]: val["name"]
+            for i, attr in enumerate(data_structure["dimensions"]["series"])
+            for _, val in enumerate(attr["values"])
+            if i == 1
+        }
+
+    except (requests.RequestException, ValueError, KeyError) as e:
+        logger.exception("Error getting indicators info for dataflow %s", dataflow_id)
+        raise DataWarehouseAPIError(str(e)) from e
+
+    logger.info("Returning indicators info for dataflow %s", dataflow_id)
     return indicators_info
 
 
@@ -83,6 +91,7 @@ def handle_get_data_for_dataflow(
         data = requests.get(url, timeout=200).json()
 
         if "errors" in data:
+            logger.error("Error getting data for dataflow %s", dataflow_id)
             raise DataWarehouseAPIError(str(data["errors"]))
 
         data = build_df_from_json(data["data"])
@@ -91,6 +100,7 @@ def handle_get_data_for_dataflow(
         raise DataWarehouseAPIError(str(e)) from e
 
     if year is not None and str(year) in data["TIME_PERIOD"].unique():
+        logger.info("Filtering data for year %s", year)
         data = data[data["TIME_PERIOD"] == str(year)]
 
     return data

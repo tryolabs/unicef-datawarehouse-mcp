@@ -7,11 +7,11 @@ from handlers import (
     handle_get_available_dataflows,
     handle_get_data_for_dataflow,
 )
-from logging_config import get_logger
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("Data Warehouse MCP", port=config.server.port)
 
+from logging_config import get_logger  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -25,6 +25,7 @@ def get_available_dataflows() -> dict[str, str | dict[str, Any]]:
     """
     logger.info("Getting available dataflows")
     available_dataflows = handle_get_available_dataflows()
+    logger.info("Returning available dataflows")
     return {
         "available_dataflows": available_dataflows,
         "input_arguments": {},
@@ -50,6 +51,7 @@ def get_all_indicators_for_dataflow(
         raise DataWarehouseAPIError(msg)
 
     indicators_info = handle_get_all_indicators_for_dataflow(dataflow_id)
+    logger.info("Returning indicators info for dataflow %s", dataflow_id)
     return {
         "all_indicators": indicators_info,
         "input_arguments": {"dataflow_id": dataflow_id},
@@ -77,6 +79,7 @@ def get_data_for_dataflow(
     Returns:
         Dictionary containing data and input arguments.
     """
+    logger.info("Getting data for dataflow %s", dataflow_id)
     if dataflow_id == "":
         msg = "Dataflow ID is required"
         logger.error(msg)
@@ -88,7 +91,7 @@ def get_data_for_dataflow(
         indicators=indicators,
         year=year,
     )
-
+    logger.info("Returning data for dataflow %s", dataflow_id)
     return {
         "data": data.to_string(max_rows=None, max_cols=None),  # type: ignore[misc]
         "input_arguments": {
