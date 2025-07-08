@@ -9,7 +9,7 @@ from handlers import (
 )
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("Data Warehouse MCP", port=config.server.port)
+mcp = FastMCP("Data Warehouse MCP", host=config.server.host, port=config.server.port)
 
 from logging_config import get_logger  # noqa: E402
 
