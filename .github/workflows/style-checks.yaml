@@ -13,27 +13,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Cache uv
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/uv
-          key: uv-cache-${{ runner.os }}-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            uv-cache-${{ runner.os }}-
-
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        uses: astral-sh/setup-uv@v4
 
-      - name: Add uv to PATH
-        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      - name: Set up Python
+        run: uv python install "3.11"
 
       - name: Install dependencies
-        run: uv pip sync --system pyproject.toml --extra dev
+        run: uv sync --frozen
 
       - name: Check linting with Ruff
         run: ruff check
