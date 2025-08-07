@@ -23,7 +23,6 @@ def handle_get_available_dataflows() -> str:
     - CME_CAUSE_OF_DEATH: Child Mortality by Cause of Death
     - DM: Demography - Population statistics, age groups, fertility, life expectancy, etc.
     - EDUCATION: Education data like literacy rates, completion rates, out-of-school rates, etc.
-    - GENDER: Gender indicators covering labor, education, health and legal frameworks
     - HIV_AIDS: HIV prevention, treatment and transmission stats
     - IMMUNISATION: Vaccination coverage rates for BCG, DTP, polio, measles and other key vaccines
     - NUTRITION: Key nutrition indicators like stunting, wasting, breastfeeding, anemia and diet
