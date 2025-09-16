@@ -1,0 +1,42 @@
+[
+    {
+        "id": "CCRI",
+        "description": "Climate Risk Index - Hazards, health risks, vulnerability factors"
+    },
+    {
+        "id": "CHLD_PVTY",
+        "description": "Child Poverty - Measures poverty levels, deprivation rates, income ratios, etc."
+    },
+    {
+        "id": "CME",
+        "description": "Child Mortality - Tracks mortality rates and deaths across age groups 0-24 years"
+    },
+    {
+        "id": "CME_CAUSE_OF_DEATH",
+        "description": "Child Mortality by Cause of Death"
+    },
+    {
+        "id": "DM",
+        "description": "Demography - Population statistics, age groups, fertility, life expectancy, etc."
+    },
+    {
+        "id": "EDUCATION",
+        "description": "Education data like literacy rates, completion rates, out-of-school rates, etc."
+    },
+    {
+        "id": "HIV_AIDS",
+        "description": "HIV prevention, treatment and transmission stats"
+    },
+    {
+        "id": "IMMUNISATION",
+        "description": "Vaccination coverage rates for BCG, DTP, polio, measles and other key vaccines"
+    },
+    {
+        "id": "NUTRITION",
+        "description": "Key nutrition indicators like stunting, wasting, breastfeeding, anemia and diet"
+    },
+    {
+        "id": "PT_CM",
+        "description": "Child Marriage, tracks early marriage rates, related outcomes and socioeconomic factors"
+    }
+]

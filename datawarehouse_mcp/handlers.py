@@ -1,10 +1,13 @@
+import json
 import urllib.parse
 from logging import getLogger
+from pathlib import Path
 
 import pandas as pd
 import requests
 from constants import BASE_URL
 from exceptions import DataWarehouseAPIError
+from schemas import Dataflow
 from sdmx_parser import build_df_from_json
 
 logger = getLogger(__name__)
@@ -16,18 +19,18 @@ def handle_get_available_dataflows() -> str:
     Returns:
         String containing descriptions of available dataflows and their purposes
     """
-    info_on_dataflows = """
-    - CCRI: Climate Risk Index - Hazards, health risks, vulnerability factors
-    - CHLD_PVTY: Child Poverty - Measures poverty levels, deprivation rates, income ratios, etc.
-    - CME: Child Mortality - Tracks mortality rates and deaths across age groups 0-24 years
-    - CME_CAUSE_OF_DEATH: Child Mortality by Cause of Death
-    - DM: Demography - Population statistics, age groups, fertility, life expectancy, etc.
-    - EDUCATION: Education data like literacy rates, completion rates, out-of-school rates, etc.
-    - HIV_AIDS: HIV prevention, treatment and transmission stats
-    - IMMUNISATION: Vaccination coverage rates for BCG, DTP, polio, measles and other key vaccines
-    - NUTRITION: Key nutrition indicators like stunting, wasting, breastfeeding, anemia and diet
-    - PT_CM: Child Marriage, tracks early marriage rates, related outcomes and socioeconomic factors
-    """
+    try:
+        dataflows_path = Path(__file__).with_name("dataflows.json")
+        with dataflows_path.open("r", encoding="utf-8") as fp:
+            raw_items = json.load(fp)
+
+        dataflows = [Dataflow(**item) for item in raw_items]
+
+        info_on_dataflows = "\n".join(f"- {item.id}: {item.description}" for item in dataflows)
+    except Exception as e:
+        logger.exception("Error loading available dataflows")
+        raise DataWarehouseAPIError(str(e)) from e
+
     return info_on_dataflows
 
 

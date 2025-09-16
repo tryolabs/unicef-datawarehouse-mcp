@@ -5,6 +5,14 @@ Transport = Literal["stdio", "sse", "streamable-http"]
 
 
 @dataclass
+class Dataflow:
+    """Dataflow metadata entry."""
+
+    id: str
+    description: str
+
+
+@dataclass
 class ServerConfig:
     """Server configuration settings."""
 
