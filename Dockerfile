@@ -21,11 +21,11 @@ RUN useradd --create-home --shell /bin/bash app && \
     chown -R app:app /app
 USER app
 
-# Expose port
-EXPOSE 8000
+# Expose port (matches config.yaml)
+EXPOSE 6000
 
-# Health check
+# Health check (SSE endpoint)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/', timeout=5)"
+    CMD python -c "import requests; requests.get('http://localhost:6000/sse', timeout=5)"
 
 CMD ["uv", "run", "datawarehouse_mcp/server.py"]

@@ -46,10 +46,11 @@ datawarehouse_mcp/
 ├── handlers.py          # Tool implementation and data processing
 ├── sdmx_parser.py       # SDMX protocol parser and client
 ├── config.py            # Configuration and settings management
-├── schemas.py           # Pydantic models and validation
+├── schemas.py           # Dataclasses-based models and types
 ├── constants.py         # Application constants
 ├── config.yaml          # Server configuration
 ├── logging_config.py    # Logging setup
+├── dataflows.json       # Curated list of available dataflows
 └── exceptions.py        # Custom exception definitions
 ```
 
@@ -73,7 +74,7 @@ The server requires minimal configuration as it connects to UNICEF's public SDMX
 ```yaml
 server:
   host: "0.0.0.0" # Server bind address
-  port: 8001 # Server port
+  port: 6000 # Server port
   transport: "sse" # MCP transport protocol
 ```
 
@@ -90,7 +91,7 @@ Currently, not all dataflows in the Data Warehouse are available through the MCP
 
 **Returns**: Dictionary containing:
 
-- `available_dataflows`: List of dataflow IDs with descriptions
+- `available_dataflows`: Formatted string listing dataflow IDs with descriptions
 - `input_arguments`: Empty (no parameters required)
 
 ### 2. Indicator Discovery
@@ -105,28 +106,26 @@ Retrieves all available indicators for a specific dataflow.
 
 **Returns**: Dictionary containing:
 
-- `indicators`: List of indicator codes with descriptions
-- `input_arguments`: Parameters needed for data queries
+- `all_indicators`: Dictionary mapping indicator codes to their names
+- `input_arguments`: {"dataflow_id": dataflow_id}
 
 ### 3. Data Retrieval
 
-#### `get_data_for_dataflow(dataflow_id: str, country: str, indicator: str, start_period: str = None, end_period: str = None)`
+#### `get_data_for_dataflow(dataflow_id: str, ref_areas: str, indicators: str, year: int | None = None)`
 
 Queries specific data from the dataflow with filters.
 
 **Parameters**:
 
 - `dataflow_id` (required): Dataflow identifier
-- `country` (required): ISO 3-letter country code (e.g., "COL", "ETH", "URY")
-- `indicator` (required): Indicator code from the dataflow
-- `start_period` (optional): Start year for time series (e.g., "2010")
-- `end_period` (optional): End year for time series (e.g., "2023")
+- `ref_areas` (required): Plus-separated ISO 3-letter country codes (e.g., "COL+ETH+URY" or "URY")
+- `indicators` (required): Plus-separated indicator codes (e.g., "DM_BRTS+DM_DEATHS")
+- `year` (optional): Year filter (e.g., 2020)
 
 **Returns**: Dictionary containing:
 
-- `data`: Statistical data meeting the filter criteria
-- `metadata`: Information about the indicator and methodology
-- `query_parameters`: Echo of the input parameters used
+- `data`: String representation of the resulting table
+- `input_arguments`: Echo of the input parameters used
 
 ## Development
 
@@ -147,7 +146,7 @@ uv run datawarehouse_mcp/server.py
 uv run pytest
 
 # Run specific tests
-uv run pytest tests/test_handlers.py -v
+uv run pytest tests/test_server.py -v
 ```
 
 ### Development Setup
@@ -175,7 +174,7 @@ The server implements the SDMX (Statistical Data and Metadata eXchange) standard
 - **Public Data**: All UNICEF indicators are publicly available
 - **No Authentication**: SDMX endpoints require no credentials
 - **Input Validation**: All parameters validated before SDMX requests
-- **Rate Limiting**: Implement client-side rate limiting
+- **Client-side rate limiting**: Not implemented; adhere to API limits
 
 ## Contributing
 
