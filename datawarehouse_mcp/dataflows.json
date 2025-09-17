@@ -38,5 +38,17 @@
     {
         "id": "PT_CM",
         "description": "Child Marriage, tracks early marriage rates, related outcomes and socioeconomic factors"
+    },
+    {
+        "id": "WASH_HEALTHCARE_FACILITY",
+        "description": "WASH services in healthcare facilities (availability of basic/limited/no services for water, sanitation, hygiene, cleaning, and health care waste management)."
+    },
+    {
+        "id": "WASH_HOUSEHOLD_SUBNAT",
+        "description": "Household WASH indicators at subnational (Admin1) level (water accessibility, sanitation type, hygiene facilities, wealth quintiles, and residence)."
+    },
+    {
+        "id": "WASH_HOUSEHOLDS",
+        "description": "Household WASH indicators at national level (drinking water, sanitation, hygiene facilities, open defecation, safely managed services, and service quality)."
     }
 ]
