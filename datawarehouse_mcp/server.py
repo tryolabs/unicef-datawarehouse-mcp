@@ -24,12 +24,21 @@ def get_available_dataflows() -> dict[str, str | dict[str, Any]]:
         Dictionary containing available dataflows and input arguments.
     """
     logger.info("Getting available dataflows")
-    available_dataflows = handle_get_available_dataflows()
-    logger.info("Returning available dataflows")
-    return {
-        "available_dataflows": available_dataflows,
-        "input_arguments": {},
-    }
+    try:
+        available_dataflows = handle_get_available_dataflows()
+    except Exception as e:
+        msg = "Error getting available dataflows"
+        logger.exception("%s", msg)
+        return {
+            "error": f"{msg}: {str(e)}",
+            "input_arguments": {},
+        }
+    else:
+        logger.info("Returning available dataflows")
+        return {
+            "available_dataflows": available_dataflows,
+            "input_arguments": {},
+        }
 
 
 @mcp.tool()
@@ -50,12 +59,20 @@ def get_all_indicators_for_dataflow(
         logger.error(msg)
         raise DataWarehouseAPIError(msg)
 
-    indicators_info = handle_get_all_indicators_for_dataflow(dataflow_id)
-    logger.info("Returning indicators info for dataflow %s", dataflow_id)
-    return {
-        "all_indicators": indicators_info,
-        "input_arguments": {"dataflow_id": dataflow_id},
-    }
+    try:
+        indicators_info = handle_get_all_indicators_for_dataflow(dataflow_id)
+    except Exception as e:
+        logger.exception("Error getting indicators for dataflow %s", dataflow_id)
+        return {
+            "error": str(e),
+            "input_arguments": {"dataflow_id": dataflow_id},
+        }
+    else:
+        logger.info("Returning indicators info for dataflow %s", dataflow_id)
+        return {
+            "all_indicators": indicators_info,
+            "input_arguments": {"dataflow_id": dataflow_id},
+        }
 
 
 @mcp.tool()
@@ -85,22 +102,35 @@ def get_data_for_dataflow(
         logger.error(msg)
         raise DataWarehouseAPIError(msg)
 
-    data = handle_get_data_for_dataflow(
-        dataflow_id=dataflow_id,
-        ref_areas=ref_areas,
-        indicators=indicators,
-        year=year,
-    )
-    logger.info("Returning data for dataflow %s", dataflow_id)
-    return {
-        "data": data.to_string(max_rows=None, max_cols=None),  # type: ignore[misc]
-        "input_arguments": {
-            "dataflow_id": dataflow_id,
-            "ref_areas": ref_areas,
-            "indicators": indicators,
-            "year": str(year) if year is not None else "",
-        },
-    }
+    try:
+        data = handle_get_data_for_dataflow(
+            dataflow_id=dataflow_id,
+            ref_areas=ref_areas,
+            indicators=indicators,
+            year=year,
+        )
+    except Exception as e:
+        logger.exception("Error getting data for dataflow %s", dataflow_id)
+        return {
+            "error": str(e),
+            "input_arguments": {
+                "dataflow_id": dataflow_id,
+                "ref_areas": ref_areas,
+                "indicators": indicators,
+                "year": str(year) if year is not None else "",
+            },
+        }
+    else:
+        logger.info("Returning data for dataflow %s", dataflow_id)
+        return {
+            "data": data.to_string(max_rows=None, max_cols=None),  # type: ignore[misc]
+            "input_arguments": {
+                "dataflow_id": dataflow_id,
+                "ref_areas": ref_areas,
+                "indicators": indicators,
+                "year": str(year) if year is not None else "",
+            },
+        }
 
 
 if __name__ == "__main__":
