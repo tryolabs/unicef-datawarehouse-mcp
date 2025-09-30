@@ -67,16 +67,18 @@ uv sync
 
 The server requires minimal configuration as it connects to UNICEF's public SDMX endpoints.
 
-### Server Configuration
+### Server configuration
 
 **`datawarehouse_mcp/config.yaml`**:
 
 ```yaml
 server:
   host: "0.0.0.0" # Server bind address
-  port: 6000 # Server port
+  port: 6000 # Internal MCP port
   transport: "sse" # MCP transport protocol
 ```
+
+The server is reachable only on the internal Docker network. The agent connects via `datawarehouse_mcp:6000/sse`.
 
 ## Available Tools
 
@@ -171,8 +173,9 @@ The server implements the SDMX (Statistical Data and Metadata eXchange) standard
 
 ### Data Security
 
-- **Public Data**: All UNICEF indicators are publicly available
-- **No Authentication**: SDMX endpoints require no credentials
+- **Public data**: All UNICEF indicators are publicly available
+- **No service secrets**: This service requires no secrets or credentials to run
+- **No authentication to SDMX**: SDMX endpoints used are public
 - **Input Validation**: All parameters validated before SDMX requests
 - **Client-side rate limiting**: Not implemented; adhere to API limits
 
